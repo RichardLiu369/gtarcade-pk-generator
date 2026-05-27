@@ -18,14 +18,10 @@ from prompt_template import (
 # ── Config ────────────────────────────────────────────────────────────────
 load_dotenv()
 HISTORY_FILE = Path(__file__).parent / "history.yaml"
-
-# ── Model Presets ─────────────────────────────────────────────────────────
-MODEL_PRESETS = {}
-
 CUSTOM_MODELS_FILE = Path(__file__).parent / "custom_models.yaml"
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────
+# ── Data Helpers ──────────────────────────────────────────────────────────
 def load_history() -> list[dict]:
     if HISTORY_FILE.exists():
         with open(HISTORY_FILE, "r", encoding="utf-8") as f:
@@ -65,6 +61,7 @@ def save_custom_models(models: dict):
         yaml.dump(models, f, allow_unicode=True, default_flow_style=False)
 
 
+# ── API Helpers ───────────────────────────────────────────────────────────
 def make_client(api_key: str, base_url: str) -> OpenAI:
     return OpenAI(api_key=api_key, base_url=base_url)
 
@@ -111,47 +108,27 @@ def render_markdown(data: dict) -> str:
     return f"""# 🎮 PK Activity | PK 活动
 
 ## 📌 标题 Title
-
 **🇨🇳** {data["title_zh"]}
-
 **🇬🇧** {data["title_en"]}
 
----
-
 ## 💬 话题 Topic
-
 **🇨🇳** {data["topic_zh"]}
-
 **🇬🇧** {data["topic_en"]}
 
----
-
 ## ✅ 正方 Pro
-
 **🇨🇳** {data["pro_zh"]}
-
 **🇬🇧** {data["pro_en"]}
 
----
-
 ## ❌ 反方 Con
-
 **🇨🇳** {data["con_zh"]}
-
 **🇬🇧** {data["con_en"]}
 
----
-
 ## 🎨 GPT Image2 Prompt
-
 ```
 {data["gpt_image_prompt"]}
 ```
 
----
-
 ## 🎨 NanoBananaPro Prompt
-
 ```
 {data["nanobanana_prompt"]}
 ```
@@ -166,382 +143,498 @@ st.set_page_config(
     page_title="GTarcade PK Generator",
     page_icon="🎮",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # ── Custom CSS ────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Main container */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+
     .main .block-container {
-        padding-top: 2rem;
-        max-width: 1200px;
+        padding-top: 1.5rem;
+        max-width: 1100px;
     }
 
-    /* Header banner */
-    .header-banner {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem 2.5rem;
-        border-radius: 16px;
+    /* ── Header ── */
+    .hero {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        padding: 2.5rem 3rem;
+        border-radius: 20px;
         margin-bottom: 2rem;
-        color: white;
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
     }
-    .header-banner h1 {
-        color: white !important;
-        font-size: 2.2rem;
-        margin-bottom: 0.3rem;
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(102,126,234,0.15) 0%, transparent 50%);
+        animation: pulse 8s ease-in-out infinite;
     }
-    .header-banner p {
-        color: rgba(255,255,255,0.85);
-        font-size: 1.05rem;
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 1; }
+    }
+    .hero h1 {
+        color: #fff !important;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 0.3rem 0;
+        position: relative;
+    }
+    .hero p {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
         margin: 0;
+        position: relative;
     }
 
-    /* Cards */
-    .card {
-        background: white;
+    /* ── Tabs ── */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0;
+        background: #f1f3f9;
         border-radius: 12px;
+        padding: 4px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 10px;
+        padding: 10px 24px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .stTabs [aria-selected="true"] {
+        background: white !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* ── Cards ── */
+    .card {
+        background: #fff;
+        border-radius: 16px;
         padding: 1.5rem;
         margin-bottom: 1rem;
-        border: 1px solid #e8e8ef;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        border: 1px solid #eee;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card-title {
-        font-size: 0.85rem;
-        font-weight: 600;
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+    .card-label {
+        font-size: 0.75rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #888;
-        margin-bottom: 0.8rem;
+        letter-spacing: 0.08em;
+        color: #999;
+        margin-bottom: 10px;
     }
 
-    /* Bilingual row */
-    .bilingual-row {
-        display: flex;
-        gap: 1rem;
-    }
-    .bilingual-col {
+    /* ── Bilingual ── */
+    .bi-row { display: flex; gap: 12px; }
+    .bi-col {
         flex: 1;
         padding: 1rem 1.2rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        line-height: 1.6;
+        border-radius: 12px;
+        font-size: 0.92rem;
+        line-height: 1.7;
     }
-    .bilingual-col.zh {
-        background: #f0f4ff;
+    .bi-col.zh {
+        background: linear-gradient(135deg, #eef2ff, #e8ecff);
         border-left: 3px solid #667eea;
     }
-    .bilingual-col.en {
-        background: #f8f6ff;
-        border-left: 3px solid #764ba2;
+    .bi-col.en {
+        background: linear-gradient(135deg, #f5f0ff, #ede8ff);
+        border-left: 3px solid #9b59b6;
     }
-    .lang-tag {
+    .tag {
         display: inline-block;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         font-weight: 700;
         padding: 2px 8px;
         border-radius: 4px;
         margin-bottom: 6px;
+        letter-spacing: 0.05em;
     }
-    .lang-tag.zh { background: #667eea; color: white; }
-    .lang-tag.en { background: #764ba2; color: white; }
+    .tag.zh { background: #667eea; color: #fff; }
+    .tag.en { background: #9b59b6; color: #fff; }
 
-    /* Pro/Con cards */
-    .pro-card {
+    /* ── Pro / Con ── */
+    .pro-box {
         background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
         border: 1px solid #c8e6c9;
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        height: 100%;
     }
-    .con-card {
+    .con-box {
         background: linear-gradient(135deg, #fce4ec, #fff3e0);
         border: 1px solid #f8bbd0;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        height: 100%;
+    }
+    .side-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .side-title.pro { color: #2e7d32; }
+    .side-title.con { color: #c62828; }
+
+    /* ── Prompt box ── */
+    .prompt-card {
+        background: #1a1b2e;
         border-radius: 12px;
         padding: 1.2rem 1.5rem;
+        margin-top: 8px;
     }
-    .pro-con-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 0.8rem;
-    }
-    .pro-con-title.pro { color: #2e7d32; }
-    .pro-con-title.con { color: #c62828; }
-
-    /* Prompt box */
-    .prompt-box {
-        background: #1e1e2e;
-        color: #cdd6f4;
-        border-radius: 10px;
-        padding: 1rem 1.2rem;
-        font-family: 'SF Mono', 'Fira Code', monospace;
-        font-size: 0.85rem;
-        line-height: 1.6;
-        overflow-x: auto;
-    }
-
-    /* Generate button */
-    .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        border-radius: 10px;
-        padding: 0.6rem 2rem;
+    .prompt-card-label {
+        color: #7c8db5;
+        font-size: 0.75rem;
         font-weight: 600;
-        font-size: 1.05rem;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
     }
-    .stButton > button[kind="primary"]:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    .prompt-card code {
+        color: #cdd6f4 !important;
+        font-size: 0.82rem;
+        line-height: 1.6;
     }
 
-    /* Sidebar styling */
+    /* ── Model card ── */
+    .model-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f8f9fb;
+        border: 1px solid #e8eaef;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin: 4px;
+        transition: all 0.2s;
+    }
+    .model-card:hover {
+        border-color: #667eea;
+        background: #f0f2ff;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    /* ── Button override ── */
+    .stButton > button {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+    }
+    .stButton > button:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+    }
+
+    /* ── Sidebar ── */
     [data-testid="stSidebar"] {
         background: #fafbfc;
     }
-    [data-testid="stSidebar"] .stMarkdown h3 {
-        font-size: 0.9rem;
-        color: #666;
-    }
 
-    /* Hide default streamlit elements */
+    /* ── Hide default ── */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+
+    /* ── Metric card ── */
+    [data-testid="stMetric"] {
+        background: #f8f9fb;
+        border-radius: 10px;
+        padding: 12px 16px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ── Header ────────────────────────────────────────────────────────────────
+# ── Hero ──────────────────────────────────────────────────────────────────
 st.markdown("""
-<div class="header-banner">
+<div class="hero">
     <h1>🎮 GTarcade PK Activity Generator</h1>
-    <p>一键生成中英双语 PK 文案 + AI 生图提示词 | Bilingual PK Content + AI Image Prompts</p>
+    <p>一键生成中英双语 PK 文案 + AI 生图提示词</p>
 </div>
 """, unsafe_allow_html=True)
 
 
-# ── Sidebar ───────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("### ⚙️ API 设置")
+# ── Session State Defaults ────────────────────────────────────────────────
+if "api_key" not in st.session_state:
+    st.session_state.api_key = os.getenv("API_KEY", "")
+if "base_url" not in st.session_state:
+    st.session_state.base_url = ""
+if "model_name" not in st.session_state:
+    st.session_state.model_name = ""
 
-    api_key = st.text_input(
-        "API Key",
-        value=os.getenv("API_KEY", ""),
-        type="password",
-        help="填入你的 API Key",
-        placeholder="sk-xxx...",
-    )
 
-    # Merge built-in + custom models
+# ── Tabs ──────────────────────────────────────────────────────────────────
+tab_generate, tab_models, tab_history = st.tabs(["🚀 生成 PK", "⚙️ 模型管理", "📊 历史记录"])
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB: 模型管理
+# ═══════════════════════════════════════════════════════════════════════════
+with tab_models:
+    st.markdown("### 已保存的模型")
+
     custom_models = load_custom_models()
-    all_presets = {**MODEL_PRESETS, **custom_models}
 
-    preset_options = list(all_presets.keys()) + ["➕ 添加自定义模型"]
-    selected_preset = st.selectbox(
-        "选择模型",
-        options=preset_options,
-        index=0,
-    )
-
-    if selected_preset == "➕ 添加自定义模型":
-        with st.form("add_custom_model", clear_on_submit=True):
-            custom_name = st.text_input("模型名称", placeholder="如：我的 DeepSeek")
-            custom_url = st.text_input("Base URL", placeholder="https://api.deepseek.com/v1")
-            custom_model = st.text_input("Model ID", placeholder="deepseek-chat")
-            submitted = st.form_submit_button("💾 保存", use_container_width=True)
-            if submitted and custom_name and custom_url and custom_model:
-                custom_models[custom_name] = {"base_url": custom_url, "model": custom_model}
-                save_custom_models(custom_models)
-                st.success(f"已保存: {custom_name}")
-                st.rerun()
-        base_url = ""
-        model_name = ""
-    elif selected_preset in custom_models:
-        preset = all_presets[selected_preset]
-        base_url = preset["base_url"]
-        model_name = preset["model"]
-        st.caption(f"Base URL: `{base_url}`")
-        st.caption(f"Model: `{model_name}`")
-        if st.button("🗑️ 删除此自定义模型", use_container_width=True):
-            del custom_models[selected_preset]
-            save_custom_models(custom_models)
-            st.rerun()
+    if not custom_models:
+        st.info("还没有保存任何模型，请在下方添加。")
     else:
-        preset = all_presets[selected_preset]
-        base_url = preset["base_url"]
-        model_name = preset["model"]
-        st.caption(f"Base URL: `{base_url}`")
-        st.caption(f"Model: `{model_name}`")
+        for name, info in custom_models.items():
+            col_info, col_del = st.columns([5, 1])
+            with col_info:
+                st.markdown(f"""
+                <div class="model-card">
+                    <strong>{name}</strong>
+                    <span style="color:#999; font-size:0.8rem;">| {info['model']}</span>
+                </div>
+                <div style="font-size:0.78rem; color:#aaa; margin-left:8px; margin-bottom:8px;">{info['base_url']}</div>
+                """, unsafe_allow_html=True)
+            with col_del:
+                if st.button("删除", key=f"del_model_{name}", use_container_width=True):
+                    del custom_models[name]
+                    save_custom_models(custom_models)
+                    st.rerun()
 
     st.markdown("---")
-    st.markdown("### 📊 历史记录")
+    st.markdown("### 添加新模型")
+    with st.form("add_model", clear_on_submit=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            new_name = st.text_input("模型名称", placeholder="如：DeepSeek V4")
+        with c2:
+            new_url = st.text_input("Base URL", placeholder="https://api.deepseek.com/v1")
+        new_model = st.text_input("Model ID", placeholder="deepseek-chat")
+        if st.form_submit_button("💾 保存模型", use_container_width=True, type="primary"):
+            if new_name and new_url and new_model:
+                custom_models[new_name] = {"base_url": new_url, "model": new_model}
+                save_custom_models(custom_models)
+                st.success(f"已保存: {new_name}")
+                st.rerun()
+            else:
+                st.error("请填写所有字段")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB: 历史记录
+# ═══════════════════════════════════════════════════════════════════════════
+with tab_history:
     history = load_history()
-    col_metric, col_clear = st.columns([2, 1])
-    with col_metric:
+
+    col_m, col_c = st.columns([4, 1])
+    with col_m:
         st.metric("已生成 PK 活动", len(history))
-    with col_clear:
-        if history and st.button("🗑️ 清空", use_container_width=True):
+    with col_c:
+        if history and st.button("🗑️ 清空全部", use_container_width=True):
             clear_all_history()
             st.rerun()
-    if history:
-        with st.expander("查看最近话题", expanded=False):
-            for i, h in enumerate(reversed(history[-20:])):
-                real_idx = len(history) - 1 - i
-                col_text, col_del = st.columns([4, 1])
-                with col_text:
-                    st.markdown(f"`{h.get('date', '')}` {h.get('title', '')}")
-                with col_del:
-                    if st.button("🗑️", key=f"del_{real_idx}", help="删除此记录"):
-                        delete_history(real_idx)
-                        st.rerun()
 
-    st.markdown("---")
-    st.caption("💡 各平台注册即可获取免费 API Key")
-
-
-# ── Main Content ──────────────────────────────────────────────────────────
-
-# Category & Hint
-st.markdown("### 📝 配置")
-col1, col2 = st.columns([2, 1])
-with col1:
-    category = st.selectbox(
-        "选择主题分类",
-        options=list(TOPIC_CATEGORIES.keys()),
-        format_func=lambda x: f"{x}  —  {TOPIC_CATEGORIES[x]['en']}",
-    )
-with col2:
-    extra_hint = st.text_input("特定方向（可选）", placeholder="如：PVP vs PVE")
-
-st.markdown("")
-
-# Buttons
-col_btn, col_test, _ = st.columns([2, 1, 1])
-with col_btn:
-    generate_clicked = st.button("🚀  一键生成 PK 活动", type="primary", use_container_width=True)
-with col_test:
-    test_clicked = st.button("🔍 测试连接", use_container_width=True)
-
-# Test connection
-if test_clicked:
-    if not api_key:
-        st.error("请先填入 API Key")
+    if not history:
+        st.info("暂无历史记录。去「生成 PK」标签页创建第一个吧！")
     else:
-        with st.spinner("测试中..."):
-            try:
-                client = make_client(api_key, base_url)
-                resp = client.chat.completions.create(
-                    model=model_name,
-                    messages=[{"role": "user", "content": "Reply with: OK"}],
-                    max_tokens=10,
-                )
-                st.success(f"连接成功 ✓  模型返回: {resp.choices[0].message.content}")
-            except Exception as e:
-                st.error(f"连接失败: {e}")
+        for i, h in enumerate(reversed(history)):
+            real_idx = len(history) - 1 - i
+            col_date, col_title, col_cat, col_del = st.columns([1.5, 3, 1.5, 0.8])
+            with col_date:
+                st.caption(h.get("date", ""))
+            with col_title:
+                st.markdown(f"**{h.get('title', '')}**")
+            with col_cat:
+                st.caption(h.get("category", ""))
+            with col_del:
+                if st.button("🗑️", key=f"del_h_{real_idx}"):
+                    delete_history(real_idx)
+                    st.rerun()
+            st.divider()
 
-# Generate
-if generate_clicked:
-    if not api_key:
-        st.error("请先填入 API Key")
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB: 生成 PK
+# ═══════════════════════════════════════════════════════════════════════════
+with tab_generate:
+    # ── API Key ──
+    st.markdown("#### API 配置")
+    api_key = st.text_input(
+        "API Key",
+        value=st.session_state.api_key,
+        type="password",
+        placeholder="sk-xxx...",
+        label_visibility="collapsed",
+    )
+    st.session_state.api_key = api_key
+
+    # ── Model Selector ──
+    custom_models = load_custom_models()
+    model_names = list(custom_models.keys())
+
+    if not model_names:
+        st.warning("请先到「⚙️ 模型管理」标签页添加模型")
         st.stop()
 
-    with st.spinner("✨ 正在生成中，请稍候..."):
-        try:
-            client = make_client(api_key, base_url)
-            data = generate_pk(client, model_name, category, extra_hint)
-            st.session_state["pk_data"] = data
-            st.session_state["pk_md"] = render_markdown(data)
-            save_history({
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "title": data["title_zh"],
-                "category": category,
-            })
-        except ValueError as e:
-            st.error("模型返回格式异常，请看下方详情")
-            with st.expander("查看模型原始返回", expanded=True):
-                st.code(str(e), language="text")
-            st.stop()
-        except Exception as e:
-            st.error(f"生成失败: {e}")
-            st.stop()
+    selected_name = st.selectbox("选择模型", options=model_names)
+    selected_info = custom_models[selected_name]
+    base_url = selected_info["base_url"]
+    model_name = selected_info["model"]
 
-# ── Display Results ───────────────────────────────────────────────────────
-if "pk_data" in st.session_state:
-    data = st.session_state["pk_data"]
-
-    st.markdown("---")
-    st.markdown("## 📋 生成结果")
-
-    # Title
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">📌 标题 TITLE</div>', unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="bilingual-row">
-        <div class="bilingual-col zh">
-            <span class="lang-tag zh">中文</span><br>
-            <strong>{data['title_zh']}</strong>
-        </div>
-        <div class="bilingual-col en">
-            <span class="lang-tag en">EN</span><br>
-            <strong>{data['title_en']}</strong>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Topic
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">💬 话题 TOPIC</div>', unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="bilingual-row">
-        <div class="bilingual-col zh">
-            <span class="lang-tag zh">中文</span><br>
-            {data['topic_zh']}
-        </div>
-        <div class="bilingual-col en">
-            <span class="lang-tag en">EN</span><br>
-            {data['topic_en']}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Pro / Con
-    col_pro, col_con = st.columns(2)
-    with col_pro:
-        st.markdown(f"""
-        <div class="pro-card">
-            <div class="pro-con-title pro">✅ 正方 PRO</div>
-            <div style="margin-bottom:0.6rem;">{data['pro_zh']}</div>
-            <div style="color:#555; font-size:0.9rem; font-style:italic;">{data['pro_en']}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col_con:
-        st.markdown(f"""
-        <div class="con-card">
-            <div class="pro-con-title con">❌ 反方 CON</div>
-            <div style="margin-bottom:0.6rem;">{data['con_zh']}</div>
-            <div style="color:#555; font-size:0.9rem; font-style:italic;">{data['con_en']}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    st.caption(f"Base URL: `{base_url}` · Model: `{model_name}`")
 
     st.markdown("")
 
-    # Image Prompts
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">🎨 生图提示词 IMAGE PROMPTS</div>', unsafe_allow_html=True)
-    col_gpt, col_nano = st.columns(2)
-    with col_gpt:
-        st.markdown("**GPT Image2**")
-        st.code(data["gpt_image_prompt"], language=None)
-    with col_nano:
-        st.markdown("**NanoBananaPro**")
-        st.code(data["nanobanana_prompt"], language=None)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ── Category & Hint ──
+    st.markdown("#### 活动配置")
+    col_cat, col_hint = st.columns([2, 1])
+    with col_cat:
+        category = st.selectbox(
+            "主题分类",
+            options=list(TOPIC_CATEGORIES.keys()),
+            format_func=lambda x: f"{x}  —  {TOPIC_CATEGORIES[x]['en']}",
+        )
+    with col_hint:
+        extra_hint = st.text_input("特定方向（可选）", placeholder="如：PVP vs PVE")
 
-    # Export
-    st.markdown("---")
-    with st.expander("📋 导出完整 Markdown（点击展开复制）", expanded=False):
-        st.code(st.session_state["pk_md"], language="markdown")
+    st.markdown("")
+
+    # ── Action Buttons ──
+    col_gen, col_test = st.columns([3, 1])
+    with col_gen:
+        generate_clicked = st.button("🚀  一键生成 PK 活动", type="primary", use_container_width=True)
+    with col_test:
+        test_clicked = st.button("🔍 测试连接", use_container_width=True)
+
+    # ── Test Connection ──
+    if test_clicked:
+        if not api_key:
+            st.error("请先填入 API Key")
+        else:
+            with st.spinner("测试中..."):
+                try:
+                    client = make_client(api_key, base_url)
+                    resp = client.chat.completions.create(
+                        model=model_name,
+                        messages=[{"role": "user", "content": "Reply with: OK"}],
+                        max_tokens=10,
+                    )
+                    st.success(f"连接成功 ✓  模型返回: {resp.choices[0].message.content}")
+                except Exception as e:
+                    st.error(f"连接失败: {e}")
+
+    # ── Generate ──
+    if generate_clicked:
+        if not api_key:
+            st.error("请先填入 API Key")
+            st.stop()
+
+        with st.spinner("✨ 正在生成中，请稍候..."):
+            try:
+                client = make_client(api_key, base_url)
+                data = generate_pk(client, model_name, category, extra_hint)
+                st.session_state["pk_data"] = data
+                st.session_state["pk_md"] = render_markdown(data)
+                save_history({
+                    "date": datetime.now().strftime("%Y-%m-%d"),
+                    "title": data["title_zh"],
+                    "category": category,
+                })
+            except ValueError as e:
+                st.error("模型返回格式异常")
+                with st.expander("查看原始返回"):
+                    st.code(str(e), language="text")
+                st.stop()
+            except Exception as e:
+                st.error(f"生成失败: {e}")
+                st.stop()
+
+    # ── Display Results ──
+    if "pk_data" in st.session_state:
+        data = st.session_state["pk_data"]
+
+        st.markdown("---")
+        st.markdown('<div class="fade-in">', unsafe_allow_html=True)
+
+        # Title
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-label">📌 标题 TITLE</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="bi-row">
+            <div class="bi-col zh"><span class="tag zh">中文</span><br><strong>{data['title_zh']}</strong></div>
+            <div class="bi-col en"><span class="tag en">EN</span><br><strong>{data['title_en']}</strong></div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # Topic
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-label">💬 话题 TOPIC</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="bi-row">
+            <div class="bi-col zh"><span class="tag zh">中文</span><br>{data['topic_zh']}</div>
+            <div class="bi-col en"><span class="tag en">EN</span><br>{data['topic_en']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # Pro / Con
+        col_pro, col_con = st.columns(2)
+        with col_pro:
+            st.markdown(f"""
+            <div class="pro-box">
+                <div class="side-title pro">✅ 正方 PRO</div>
+                <div style="margin-bottom:8px;">{data['pro_zh']}</div>
+                <div style="color:#666; font-size:0.88rem; font-style:italic;">{data['pro_en']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_con:
+            st.markdown(f"""
+            <div class="con-box">
+                <div class="side-title con">❌ 反方 CON</div>
+                <div style="margin-bottom:8px;">{data['con_zh']}</div>
+                <div style="color:#666; font-size:0.88rem; font-style:italic;">{data['con_en']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("")
+
+        # Image Prompts
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-label">🎨 生图提示词 IMAGE PROMPTS</div>', unsafe_allow_html=True)
+        col_gpt, col_nano = st.columns(2)
+        with col_gpt:
+            st.markdown(f"""
+            <div class="prompt-card">
+                <div class="prompt-card-label">GPT Image2</div>
+                <code>{data['gpt_image_prompt']}</code>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_nano:
+            st.markdown(f"""
+            <div class="prompt-card">
+                <div class="prompt-card-label">NanoBananaPro</div>
+                <code>{data['nanobanana_prompt']}</code>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # Export
+        with st.expander("📋 导出完整 Markdown", expanded=False):
+            st.code(st.session_state["pk_md"], language="markdown")
+
+        st.markdown('</div>', unsafe_allow_html=True)
