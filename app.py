@@ -58,6 +58,25 @@ MODEL_PRESETS = {
     "OpenRouter: GPT-4o": {"base_url": "https://openrouter.ai/api/v1", "model": "openai/gpt-4o"},
     "OpenRouter: DeepSeek V3": {"base_url": "https://openrouter.ai/api/v1", "model": "deepseek/deepseek-chat"},
     "OpenRouter: Gemini 2.5 Pro": {"base_url": "https://openrouter.ai/api/v1", "model": "google/gemini-2.5-pro-preview"},
+    # ── 公司网关 (GTarcade Gateway) - 国内 ──
+    "🏢 Claude Sonnet 4": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "claude-sonnet-4-6"},
+    "🏢 Claude Opus 4": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "claude-opus-4-7"},
+    "🏢 Claude Haiku 4": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "claude-haiku-4-5"},
+    "🏢 GPT-4.1": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "gpt-4.1"},
+    "🏢 GPT-4o": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "gpt-4o"},
+    "🏢 GPT-5.4": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "gpt-5.4"},
+    "🏢 DeepSeek V3": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "Deepseek-v3-2"},
+    "🏢 DeepSeek V4 Pro": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "deepseek-v4-pro"},
+    "🏢 DeepSeek V4 Flash": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "deepseek-v4-flash"},
+    "🏢 Qwen 3.5 Plus": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "qwen3.5-plus"},
+    "🏢 Qwen 3.7 Max": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "qwen3.7-max"},
+    "🏢 豆包 Seed 2.0 Pro": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "Doubao-seed-2-0-pro"},
+    "🏢 豆包 1.5 Pro": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "Doubao-1-5-pro"},
+    "🏢 GLM-5": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "glm-5"},
+    "🏢 GLM-5.1": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "glm-5.1"},
+    "🏢 Kimi K2.5": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "kimi-k2.5"},
+    "🏢 Kimi K2.6": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "kimi-k2.6"},
+    "🏢 Gemini 3.0 Pro": {"base_url": "https://ai-gw-cn.uuzu.com/v1", "model": "gemini-3.0-pro"},
 }
 
 
