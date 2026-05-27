@@ -152,9 +152,9 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --apple-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
-    --apple-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-    --apple-bounce: cubic-bezier(0.34, 1.4, 0.64, 1);
+    --spring-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --spring-damping: cubic-bezier(0.22, 1.2, 0.36, 1);
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
     --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
@@ -172,6 +172,55 @@ st.markdown("""
     --surface: rgba(255,255,255,0.72);
     --surface-solid: #ffffff;
     --separator: rgba(0,0,0,0.06);
+}
+
+/* ── Spring Damping Keyframes ── */
+/* Hero: overshoot → bounce back → settle */
+@keyframes heroSpring {
+    0%   { opacity: 0; transform: translateY(30px) scale(0.95); }
+    40%  { opacity: 1; transform: translateY(-8px) scale(1.02); }
+    55%  { transform: translateY(4px) scale(0.99); }
+    70%  { transform: translateY(-2px) scale(1.005); }
+    82%  { transform: translateY(1px) scale(0.998); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card: spring entrance with damping */
+@keyframes cardSpring {
+    0%   { opacity: 0; transform: translateY(24px) scale(0.96); }
+    35%  { opacity: 1; transform: translateY(-6px) scale(1.015); }
+    55%  { transform: translateY(3px) scale(0.995); }
+    72%  { transform: translateY(-1.5px) scale(1.003); }
+    88%  { transform: translateY(0.5px) scale(0.999); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Breathing: subtle continuous pulse */
+@keyframes breathe {
+    0%, 100% { transform: scale(1); box-shadow: var(--shadow-lg); }
+    50%      { transform: scale(1.003); box-shadow: 0 12px 44px rgba(0,0,0,0.1), 0 3px 10px rgba(0,0,0,0.07); }
+}
+
+/* Breathing glow on hero */
+@keyframes heroGlow {
+    0%, 100% { opacity: 0; }
+    50%      { opacity: 1; }
+}
+
+/* Button spring press */
+@keyframes btnPress {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(0.94); }
+    50%  { transform: scale(1.03); }
+    70%  { transform: scale(0.98); }
+    85%  { transform: scale(1.01); }
+    100% { transform: scale(1); }
+}
+
+/* Subtle float for decorative elements */
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
 }
 
 * {
@@ -208,7 +257,7 @@ st.markdown("""
     padding: 2.5rem 2.5rem 2rem;
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow-lg);
-    animation: heroIn 0.7s var(--apple-spring) both;
+    animation: heroSpring 1s var(--spring-damping) both, breathe 6s ease-in-out 1.2s infinite;
     position: relative;
     overflow: hidden;
 }
@@ -219,9 +268,14 @@ st.markdown("""
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.06) 50%, transparent 100%);
 }
-@keyframes heroIn {
-    0% { opacity: 0; transform: translateY(16px) scale(0.98); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at 30% 20%, rgba(0,122,255,0.03) 0%, transparent 60%);
+    animation: heroGlow 6s ease-in-out 1.2s infinite;
+    pointer-events: none;
 }
 .hero h1 {
     color: var(--text-primary) !important;
@@ -277,20 +331,17 @@ st.markdown("""
     padding: 1.4rem 1.6rem;
     margin-bottom: 12px;
     box-shadow: var(--shadow-md);
-    animation: cardIn 0.5s var(--apple-spring) both;
-    transition: transform 0.4s var(--apple-spring), box-shadow 0.4s var(--apple-ease);
+    animation: cardSpring 0.8s var(--spring-damping) both;
+    transition: transform 0.5s var(--spring-damping), box-shadow 0.5s var(--spring-settle);
 }
 .card:hover {
-    transform: scale(1.005);
+    transform: scale(1.008) translateY(-2px);
     box-shadow: var(--shadow-lg);
+    transition: transform 0.6s var(--spring-bounce), box-shadow 0.4s ease;
 }
-@keyframes cardIn {
-    0% { opacity: 0; transform: translateY(12px) scale(0.98); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-.card:nth-child(2) { animation-delay: 0.06s; }
-.card:nth-child(3) { animation-delay: 0.12s; }
-.card:nth-child(4) { animation-delay: 0.18s; }
+.card:nth-child(2) { animation-delay: 0.08s; }
+.card:nth-child(3) { animation-delay: 0.16s; }
+.card:nth-child(4) { animation-delay: 0.24s; }
 
 .card-label {
     font-size: 0.68rem;
@@ -336,7 +387,11 @@ st.markdown("""
     border-radius: var(--radius);
     padding: 1.2rem 1.4rem;
     height: 100%;
-    animation: cardIn 0.55s var(--apple-spring) 0.12s both;
+    animation: cardSpring 0.85s var(--spring-damping) 0.16s both;
+    transition: transform 0.5s var(--spring-bounce);
+}
+.pro-box:hover, .con-box:hover {
+    transform: scale(1.01);
 }
 .pro-box {
     background: rgba(52, 199, 89, 0.06);
@@ -397,11 +452,11 @@ st.markdown("""
     font-weight: 600;
     color: var(--text-primary);
     box-shadow: var(--shadow-sm);
-    transition: all 0.35s var(--apple-spring);
+    transition: transform 0.6s var(--spring-bounce), box-shadow 0.4s ease;
 }
 .model-pill:hover {
     box-shadow: var(--shadow-md);
-    transform: scale(1.02);
+    transform: scale(1.05);
 }
 
 /* ── Inputs ── */
@@ -418,7 +473,9 @@ st.markdown("""
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3.5px rgba(0,122,255,0.15), var(--shadow-sm) !important;
+    box-shadow: 0 0 0 4px rgba(0,122,255,0.12), var(--shadow-sm) !important;
+    transform: scale(1.01);
+    transition: all 0.5s var(--spring-bounce) !important;
 }
 .stTextInput > div > div > input::placeholder {
     color: var(--text-tertiary) !important;
@@ -441,24 +498,26 @@ st.markdown("""
     box-shadow: var(--shadow-xl) !important;
 }
 
-/* ── Buttons ── */
+/* ── Buttons with spring damping ── */
 .stButton > button {
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.88rem !important;
     letter-spacing: -0.01em;
     border: 0.5px solid rgba(0,0,0,0.08) !important;
-    transition: all 0.35s var(--apple-spring) !important;
+    transition: transform 0.6s var(--spring-bounce), box-shadow 0.4s var(--spring-settle) !important;
     box-shadow: var(--shadow-sm) !important;
-}
-.stButton > button:active {
-    transform: scale(0.97) !important;
-    box-shadow: none !important;
-    transition-duration: 0.1s !important;
+    animation: gentleFloat 4s ease-in-out infinite;
+    animation-play-state: paused;
 }
 .stButton > button:hover {
-    transform: scale(1.02) !important;
+    transform: scale(1.04) translateY(-1px) !important;
     box-shadow: var(--shadow-md) !important;
+    animation-play-state: running;
+}
+.stButton > button:active {
+    animation: btnPress 0.5s var(--spring-damping) !important;
+    box-shadow: none !important;
 }
 .stButton > button[kind="primary"] {
     background: var(--accent) !important;
@@ -467,7 +526,7 @@ st.markdown("""
     box-shadow: 0 2px 8px rgba(0,122,255,0.3) !important;
 }
 .stButton > button[kind="primary"]:hover {
-    box-shadow: 0 4px 14px rgba(0,122,255,0.35) !important;
+    box-shadow: 0 6px 20px rgba(0,122,255,0.35) !important;
 }
 .stButton > button[kind="primary"]:active {
     background: #0066d6 !important;
