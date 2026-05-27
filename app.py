@@ -77,6 +77,19 @@ def save_history(entry: dict):
         yaml.dump(history, f, allow_unicode=True, default_flow_style=False)
 
 
+def delete_history(index: int):
+    history = load_history()
+    if 0 <= index < len(history):
+        history.pop(index)
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            yaml.dump(history, f, allow_unicode=True, default_flow_style=False)
+
+
+def clear_all_history():
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        yaml.dump([], f)
+
+
 def load_custom_models() -> dict:
     if CUSTOM_MODELS_FILE.exists():
         with open(CUSTOM_MODELS_FILE, "r", encoding="utf-8") as f:
@@ -402,11 +415,24 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📊 历史记录")
     history = load_history()
-    st.metric("已生成 PK 活动", len(history))
+    col_metric, col_clear = st.columns([2, 1])
+    with col_metric:
+        st.metric("已生成 PK 活动", len(history))
+    with col_clear:
+        if history and st.button("🗑️ 清空", use_container_width=True):
+            clear_all_history()
+            st.rerun()
     if history:
-        with st.expander("查看最近话题"):
-            for h in reversed(history[-10:]):
-                st.markdown(f"• `{h.get('date', '')}` {h.get('title', '')}")
+        with st.expander("查看最近话题", expanded=False):
+            for i, h in enumerate(reversed(history[-20:])):
+                real_idx = len(history) - 1 - i
+                col_text, col_del = st.columns([4, 1])
+                with col_text:
+                    st.markdown(f"`{h.get('date', '')}` {h.get('title', '')}")
+                with col_del:
+                    if st.button("🗑️", key=f"del_{real_idx}", help="删除此记录"):
+                        delete_history(real_idx)
+                        st.rerun()
 
     st.markdown("---")
     st.caption("💡 免费 API 推荐：通义千问、DeepSeek、智谱 GLM")
