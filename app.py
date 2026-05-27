@@ -20,43 +20,14 @@ load_dotenv()
 HISTORY_FILE = Path(__file__).parent / "history.yaml"
 
 # ── Model Presets ─────────────────────────────────────────────────────────
+GW = "https://ai-gw-cn.uuzu.com/v1"
 MODEL_PRESETS = {
-    # DeepSeek
-    "DeepSeek V3": {"base_url": "https://api.deepseek.com", "model": "deepseek-chat"},
-    "DeepSeek R1 (推理)": {"base_url": "https://api.deepseek.com", "model": "deepseek-reasoner"},
-    # 通义千问 (Qwen)
-    "Qwen 3.7 Max": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-max-latest"},
-    "Qwen 3.5 Plus": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-plus-latest"},
-    "Qwen 3.5 Turbo": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-turbo-latest"},
-    "Qwen 3.5 Flash": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-flash-latest"},
-    # Kimi (Moonshot)
-    "Kimi K2": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-auto"},
-    "Kimi 128K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-128k"},
-    "Kimi 8K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-8k"},
-    # 豆包 (Doubao / ByteDance)
-    "豆包 Seed 2.0 Pro": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-seed-2-0-pro"},
-    "豆包 1.5 Pro": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-1-5-pro-250328"},
-    "豆包 1.5 Lite": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-1-5-lite-250328"},
-    # 智谱 (Zhipu / GLM)
-    "GLM-4 Plus": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-plus"},
-    "GLM-4 Flash": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-flash"},
-    "GLM-4 Air": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-air"},
-    # OpenAI
-    "GPT-4o": {"base_url": "https://api.openai.com/v1", "model": "gpt-4o"},
-    "GPT-4o Mini": {"base_url": "https://api.openai.com/v1", "model": "gpt-4o-mini"},
-    "GPT-4.1": {"base_url": "https://api.openai.com/v1", "model": "gpt-4.1"},
-    "GPT-4.1 Mini": {"base_url": "https://api.openai.com/v1", "model": "gpt-4.1-mini"},
-    # Claude
-    "Claude Sonnet 4": {"base_url": "https://api.anthropic.com/v1", "model": "claude-sonnet-4-20250514"},
-    "Claude Haiku 4": {"base_url": "https://api.anthropic.com/v1", "model": "claude-haiku-4-20250514"},
-    # Gemini
-    "Gemini 2.5 Pro": {"base_url": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-2.5-pro-preview-05-06"},
-    "Gemini 2.5 Flash": {"base_url": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-2.5-flash-preview-05-20"},
-    # OpenRouter (聚合平台)
-    "OpenRouter: Claude Sonnet 4": {"base_url": "https://openrouter.ai/api/v1", "model": "anthropic/claude-sonnet-4"},
-    "OpenRouter: GPT-4o": {"base_url": "https://openrouter.ai/api/v1", "model": "openai/gpt-4o"},
-    "OpenRouter: DeepSeek V3": {"base_url": "https://openrouter.ai/api/v1", "model": "deepseek/deepseek-chat"},
-    "OpenRouter: Gemini 2.5 Pro": {"base_url": "https://openrouter.ai/api/v1", "model": "google/gemini-2.5-pro-preview"},
+    "Kimi K2.6": {"base_url": GW, "model": "kimi-k2.6"},
+    "DeepSeek V4 Pro": {"base_url": GW, "model": "deepseek-v4-pro"},
+    "DeepSeek V4 Flash": {"base_url": GW, "model": "deepseek-v4-flash"},
+    "GLM 5.1": {"base_url": GW, "model": "glm-5.1"},
+    "MiMo V2.5 Pro": {"base_url": GW, "model": "mimo-v2.5-pro"},
+    "MiMo V2.5": {"base_url": GW, "model": "mimo-v2.5"},
 }
 
 CUSTOM_MODELS_FILE = Path(__file__).parent / "custom_models.yaml"
@@ -435,7 +406,7 @@ with st.sidebar:
                         st.rerun()
 
     st.markdown("---")
-    st.caption("💡 免费 API 推荐：通义千问、DeepSeek、智谱 GLM")
+    st.caption("💡 需在公司内网环境下使用")
 
 
 # ── Main Content ──────────────────────────────────────────────────────────
