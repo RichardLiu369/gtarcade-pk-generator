@@ -230,7 +230,7 @@ st.markdown("""
 
 /* ── Background ── */
 .stApp {
-    background: linear-gradient(160deg, #f0f2ff 0%, #f5f5f7 30%, #fff5f5 60%, #f5f5f7 100%);
+    background: #F2F2F7;
 }
 
 /* ── Main container ── */
@@ -243,31 +243,14 @@ st.markdown("""
 
 /* ── Hero ── */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: #007AFF;
     border-radius: var(--radius-lg);
     padding: 2.5rem 2.5rem 2rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3), 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 30px rgba(0, 122, 255, 0.25);
     animation: heroSpring 1s var(--spring-damping) both, breathe 6s ease-in-out 1.2s infinite;
     position: relative;
     overflow: hidden;
-}
-.hero::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-}
-.hero::before {
-    content: '';
-    position: absolute;
-    top: -50%; right: -30%;
-    width: 400px; height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-    animation: heroGlow 6s ease-in-out 1.2s infinite;
-    pointer-events: none;
 }
 .hero h1 {
     color: #fff !important;
@@ -288,7 +271,7 @@ st.markdown("""
 /* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] {
     gap: 0;
-    background: rgba(102, 126, 234, 0.08);
+    background: #E5E5EA;
     border-radius: 12px;
     padding: 3px;
 }
@@ -302,12 +285,12 @@ st.markdown("""
     letter-spacing: -0.01em;
 }
 .stTabs [data-baseweb="tab"]:hover {
-    color: #667eea;
+    color: var(--text-primary);
 }
 .stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, #667eea, #764ba2) !important;
-    color: #fff !important;
-    box-shadow: 0 2px 12px rgba(102,126,234,0.3);
+    background: #fff !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .stTabs [data-baseweb="tab-border"],
 .stTabs [data-baseweb="tab-highlight"] {
@@ -319,7 +302,7 @@ st.markdown("""
     background: rgba(255,255,255,0.85);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
-    border: 1px solid rgba(102,126,234,0.1);
+    border: 1px solid rgba(0,0,0,0.06);
     border-radius: var(--radius);
     padding: 1.4rem 1.6rem;
     margin-bottom: 12px;
@@ -329,8 +312,8 @@ st.markdown("""
 }
 .card:hover {
     transform: scale(1.008) translateY(-2px);
-    box-shadow: 0 10px 40px rgba(102,126,234,0.12), 0 2px 8px rgba(0,0,0,0.06);
-    border-color: rgba(102,126,234,0.25);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(0,0,0,0.1);
     transition: transform 0.6s var(--spring-bounce), box-shadow 0.4s ease;
 }
 .card:nth-child(2) { animation-delay: 0.08s; }
@@ -342,7 +325,7 @@ st.markdown("""
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #667eea;
+    color: var(--text-secondary);
     margin-bottom: 12px;
 }
 
@@ -357,11 +340,11 @@ st.markdown("""
     color: var(--text-primary);
 }
 .bi-col.zh {
-    background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(0,122,255,0.04));
+    background: rgba(0, 122, 255, 0.06);
     border-left: 3px solid #007AFF;
 }
 .bi-col.en {
-    background: linear-gradient(135deg, rgba(88,86,214,0.08), rgba(155,89,182,0.04));
+    background: rgba(88, 86, 214, 0.06);
     border-left: 3px solid #5856D6;
 }
 .tag {
@@ -388,13 +371,13 @@ st.markdown("""
     transform: scale(1.01);
 }
 .pro-box {
-    background: linear-gradient(135deg, rgba(52,199,89,0.1), rgba(52,199,89,0.04));
-    border: 1px solid rgba(52,199,89,0.25);
+    background: rgba(52, 199, 89, 0.08);
+    border: 1px solid rgba(52, 199, 89, 0.2);
     border-left: 4px solid #34C759;
 }
 .con-box {
-    background: linear-gradient(135deg, rgba(255,59,48,0.1), rgba(255,149,0,0.04));
-    border: 1px solid rgba(255,59,48,0.25);
+    background: rgba(255, 59, 48, 0.08);
+    border: 1px solid rgba(255, 59, 48, 0.2);
     border-left: 4px solid #FF3B30;
 }
 .side-title {
@@ -416,12 +399,12 @@ st.markdown("""
 
 /* ── Prompt box ── */
 .prompt-box {
-    background: linear-gradient(135deg, #1a1b2e, #2d1b69);
+    background: #1C1C1E;
     border-radius: 12px;
     padding: 1.1rem 1.3rem;
 }
 .prompt-box-label {
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.45);
     font-size: 0.62rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -429,7 +412,7 @@ st.markdown("""
     margin-bottom: 8px;
 }
 .prompt-box code {
-    color: rgba(255,255,255,0.82) !important;
+    color: rgba(255,255,255,0.85) !important;
     font-size: 0.8rem;
     line-height: 1.6;
     font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
@@ -440,8 +423,8 @@ st.markdown("""
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.05));
-    border: 1px solid rgba(102,126,234,0.2);
+    background: var(--accent-light);
+    border: 1px solid rgba(0, 122, 255, 0.15);
     border-radius: 10px;
     padding: 9px 14px;
     font-size: 0.85rem;
@@ -451,9 +434,9 @@ st.markdown("""
     transition: transform 0.6s var(--spring-bounce), box-shadow 0.4s ease;
 }
 .model-pill:hover {
-    box-shadow: 0 4px 16px rgba(102,126,234,0.2);
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
-    border-color: rgba(102,126,234,0.4);
+    border-color: rgba(0, 122, 255, 0.3);
 }
 
 /* ── Inputs ── */
@@ -532,8 +515,8 @@ st.markdown("""
 
 /* ── Metric ── */
 [data-testid="stMetric"] {
-    background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.04));
-    border: 1px solid rgba(102,126,234,0.15);
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
     border-radius: 12px;
     padding: 14px 18px;
     box-shadow: var(--shadow-sm);
