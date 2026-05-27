@@ -25,38 +25,41 @@ MODEL_PRESETS = {
     "DeepSeek V3": {"base_url": "https://api.deepseek.com", "model": "deepseek-chat"},
     "DeepSeek R1 (推理)": {"base_url": "https://api.deepseek.com", "model": "deepseek-reasoner"},
     # 通义千问 (Qwen)
-    "通义千问 Plus": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-plus"},
-    "通义千问 Max": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-max"},
-    "通义千问 Turbo": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-turbo"},
+    "Qwen 3.7 Max": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-max-latest"},
+    "Qwen 3.5 Plus": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-plus-latest"},
+    "Qwen 3.5 Turbo": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-turbo-latest"},
+    "Qwen 3.5 Flash": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "model": "qwen-flash-latest"},
     # Kimi (Moonshot)
-    "Kimi 8K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-8k"},
-    "Kimi 32K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-32k"},
+    "Kimi K2": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-auto"},
     "Kimi 128K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-128k"},
+    "Kimi 8K": {"base_url": "https://api.moonshot.cn/v1", "model": "moonshot-v1-8k"},
     # 豆包 (Doubao / ByteDance)
-    "豆包 Pro 4K": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-pro-4k"},
-    "豆包 Pro 32K": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-pro-32k"},
-    "豆包 Pro 128K": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-pro-128k"},
+    "豆包 Seed 2.0 Pro": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-seed-2-0-pro"},
+    "豆包 1.5 Pro": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-1-5-pro-250328"},
+    "豆包 1.5 Lite": {"base_url": "https://ark.cn-beijing.volces.com/api/v3", "model": "doubao-1-5-lite-250328"},
     # 智谱 (Zhipu / GLM)
-    "智谱 GLM-4": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4"},
-    "智谱 GLM-4-Flash": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-flash"},
-    # 零一万物 (Yi / 01.AI)
-    "Yi-Large": {"base_url": "https://api.lingyiwanwu.com/v1", "model": "yi-large"},
-    "Yi-Medium": {"base_url": "https://api.lingyiwanwu.com/v1", "model": "yi-medium"},
-    # 百度文心 (ERNIE)
-    "文心一言 ERNIE 4.0": {"base_url": "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop", "model": "ernie-4.0-8k"},
-    # MiniMax
-    "MiniMax abab6.5": {"base_url": "https://api.minimax.chat/v1", "model": "abab6.5-chat"},
-    # 讯飞星火 (Spark)
-    "讯飞星火 Max": {"base_url": "https://spark-api-open.xf-yun.com/v1", "model": "generalv3.5"},
+    "GLM-4 Plus": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-plus"},
+    "GLM-4 Flash": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-flash"},
+    "GLM-4 Air": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4-air"},
     # OpenAI
     "GPT-4o": {"base_url": "https://api.openai.com/v1", "model": "gpt-4o"},
     "GPT-4o Mini": {"base_url": "https://api.openai.com/v1", "model": "gpt-4o-mini"},
-    # OpenRouter
+    "GPT-4.1": {"base_url": "https://api.openai.com/v1", "model": "gpt-4.1"},
+    "GPT-4.1 Mini": {"base_url": "https://api.openai.com/v1", "model": "gpt-4.1-mini"},
+    # Claude
+    "Claude Sonnet 4": {"base_url": "https://api.anthropic.com/v1", "model": "claude-sonnet-4-20250514"},
+    "Claude Haiku 4": {"base_url": "https://api.anthropic.com/v1", "model": "claude-haiku-4-20250514"},
+    # Gemini
+    "Gemini 2.5 Pro": {"base_url": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-2.5-pro-preview-05-06"},
+    "Gemini 2.5 Flash": {"base_url": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-2.5-flash-preview-05-20"},
+    # OpenRouter (聚合平台)
     "OpenRouter: Claude Sonnet 4": {"base_url": "https://openrouter.ai/api/v1", "model": "anthropic/claude-sonnet-4"},
     "OpenRouter: GPT-4o": {"base_url": "https://openrouter.ai/api/v1", "model": "openai/gpt-4o"},
     "OpenRouter: DeepSeek V3": {"base_url": "https://openrouter.ai/api/v1", "model": "deepseek/deepseek-chat"},
     "OpenRouter: Gemini 2.5 Pro": {"base_url": "https://openrouter.ai/api/v1", "model": "google/gemini-2.5-pro-preview"},
 }
+
+CUSTOM_MODELS_FILE = Path(__file__).parent / "custom_models.yaml"
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────
@@ -72,6 +75,18 @@ def save_history(entry: dict):
     history.append(entry)
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         yaml.dump(history, f, allow_unicode=True, default_flow_style=False)
+
+
+def load_custom_models() -> dict:
+    if CUSTOM_MODELS_FILE.exists():
+        with open(CUSTOM_MODELS_FILE, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    return {}
+
+
+def save_custom_models(models: dict):
+    with open(CUSTOM_MODELS_FILE, "w", encoding="utf-8") as f:
+        yaml.dump(models, f, allow_unicode=True, default_flow_style=False)
 
 
 def make_client(api_key: str, base_url: str) -> OpenAI:
@@ -343,18 +358,42 @@ with st.sidebar:
         placeholder="sk-xxx...",
     )
 
-    preset_options = list(MODEL_PRESETS.keys()) + ["🔧 自定义"]
+    # Merge built-in + custom models
+    custom_models = load_custom_models()
+    all_presets = {**MODEL_PRESETS, **custom_models}
+
+    preset_options = list(all_presets.keys()) + ["➕ 添加自定义模型"]
     selected_preset = st.selectbox(
         "选择模型",
         options=preset_options,
         index=0,
     )
 
-    if selected_preset == "🔧 自定义":
-        base_url = st.text_input("Base URL", value=os.getenv("BASE_URL", "https://api.deepseek.com"))
-        model_name = st.text_input("Model", value=os.getenv("MODEL_NAME", "deepseek-chat"))
+    if selected_preset == "➕ 添加自定义模型":
+        with st.form("add_custom_model", clear_on_submit=True):
+            custom_name = st.text_input("模型名称", placeholder="如：我的 DeepSeek")
+            custom_url = st.text_input("Base URL", placeholder="https://api.deepseek.com/v1")
+            custom_model = st.text_input("Model ID", placeholder="deepseek-chat")
+            submitted = st.form_submit_button("💾 保存", use_container_width=True)
+            if submitted and custom_name and custom_url and custom_model:
+                custom_models[custom_name] = {"base_url": custom_url, "model": custom_model}
+                save_custom_models(custom_models)
+                st.success(f"已保存: {custom_name}")
+                st.rerun()
+        base_url = ""
+        model_name = ""
+    elif selected_preset in custom_models:
+        preset = all_presets[selected_preset]
+        base_url = preset["base_url"]
+        model_name = preset["model"]
+        st.caption(f"Base URL: `{base_url}`")
+        st.caption(f"Model: `{model_name}`")
+        if st.button("🗑️ 删除此自定义模型", use_container_width=True):
+            del custom_models[selected_preset]
+            save_custom_models(custom_models)
+            st.rerun()
     else:
-        preset = MODEL_PRESETS[selected_preset]
+        preset = all_presets[selected_preset]
         base_url = preset["base_url"]
         model_name = preset["model"]
         st.caption(f"Base URL: `{base_url}`")
