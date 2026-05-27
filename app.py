@@ -20,14 +20,13 @@ load_dotenv()
 HISTORY_FILE = Path(__file__).parent / "history.yaml"
 
 # ── Model Presets ─────────────────────────────────────────────────────────
-GW = "https://ai-gw-cn.uuzu.com/v1"
 MODEL_PRESETS = {
-    "Kimi K2.6": {"base_url": GW, "model": "kimi-k2.6"},
-    "DeepSeek V4 Pro": {"base_url": GW, "model": "deepseek-v4-pro"},
-    "DeepSeek V4 Flash": {"base_url": GW, "model": "deepseek-v4-flash"},
-    "GLM 5.1": {"base_url": GW, "model": "glm-5.1"},
-    "MiMo V2.5 Pro": {"base_url": GW, "model": "mimo-v2.5-pro"},
-    "MiMo V2.5": {"base_url": GW, "model": "mimo-v2.5"},
+    "Kimi K2.6": {"base_url": "https://api.moonshot.cn/v1", "model": "kimi-k2.6"},
+    "DeepSeek V4 Pro": {"base_url": "https://api.deepseek.com", "model": "deepseek-v4-pro"},
+    "DeepSeek V4 Flash": {"base_url": "https://api.deepseek.com", "model": "deepseek-v4-flash"},
+    "GLM 5.1": {"base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-5.1"},
+    "MiMo V2.5 Pro": {"base_url": "https://api.mimo.com/v1", "model": "mimo-v2.5-pro"},
+    "MiMo V2.5": {"base_url": "https://api.mimo.com/v1", "model": "mimo-v2.5"},
 }
 
 CUSTOM_MODELS_FILE = Path(__file__).parent / "custom_models.yaml"
@@ -406,7 +405,7 @@ with st.sidebar:
                         st.rerun()
 
     st.markdown("---")
-    st.caption("💡 需在公司内网环境下使用")
+    st.caption("💡 各平台注册即可获取免费 API Key")
 
 
 # ── Main Content ──────────────────────────────────────────────────────────
