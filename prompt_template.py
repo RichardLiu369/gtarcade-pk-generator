@@ -75,6 +75,46 @@ TOPIC_CATEGORIES = {
         "en": "Sports & Competition",
         "desc": "team debates, sportsmanship, esports vs traditional sports, GOAT discussions",
     },
+    # ── Work & Career ──
+    "职场与工作": {
+        "en": "Work & Career",
+        "desc": "remote work vs office, side hustles, overtime culture, career choices, hustle culture",
+    },
+    # ── Health & Self-Discipline ──
+    "健康与自律": {
+        "en": "Health & Self-Discipline",
+        "desc": "fitness routines, early birds vs night owls, mental health, personal trainers, discipline vs relaxation",
+    },
+    # ── Pets & Animals ──
+    "宠物与动物": {
+        "en": "Pets & Animals",
+        "desc": "cats vs dogs, pet ownership debates, animal rights, indoor vs outdoor pets",
+    },
+    # ── Environment & Sustainability ──
+    "环保与生活方式": {
+        "en": "Environment & Sustainability",
+        "desc": "veganism, fast fashion, zero waste, eco-friendly habits, climate action",
+    },
+    # ── Love & Dating ──
+    "情感与恋爱": {
+        "en": "Love & Dating",
+        "desc": "single life vs relationships, long-distance love, dating apps, modern romance",
+    },
+    # ── Money & Spending ──
+    "金钱与消费": {
+        "en": "Money & Spending",
+        "desc": "saving vs spending, consumerism, financial planning, luxury vs frugality",
+    },
+    # ── Family & Generations ──
+    "家庭与代际": {
+        "en": "Family & Generations",
+        "desc": "generation gaps, parenting styles, traditional vs modern families, aging parents",
+    },
+    # ── Holidays & Culture ──
+    "节日与文化": {
+        "en": "Holidays & Culture",
+        "desc": "holiday preferences, cultural differences, tradition vs commercialization, global festivals",
+    },
 }
 
 
